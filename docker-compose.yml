@@ -8,10 +8,13 @@ services:
             - ./data/nginx/default_${NGINX_PROTOCOL}.conf:/etc/nginx/conf.d/default.conf
             - ./data/html:/var/www/html
             - ./data/letsencrypt:/etc/letsencrypt
+            - ./data/flask/flask_app_to_deploy/static:/static
         links:
             - phpmyadmin:phpmyadmin
+            - flask:flask
         depends_on:
             - phpmyadmin
+            - flask
     phpmyadmin:
         image: phpmyadmin:5.2.1
         environment:
@@ -33,6 +36,16 @@ services:
             - mysql_volume:/var/lib/mysql
         ports:
             - ${IP}:${MYSQL_PORT}:3306
-
+    flask:
+        build:
+            context: ./data/flask
+            dockerfile: flask.Dockerfile
+        command: gunicorn -w 4 --bind 0.0.0.0:5000 app:app
+        volumes:
+            - ./data/flask/flask_app_to_deploy:/flask_app_to_deploy
+        # ports:
+        #     - ${IP}:5000:5000
+        depends_on:
+            - mysql
 volumes:
     mysql_volume:
