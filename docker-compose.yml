@@ -30,6 +30,9 @@ services:
         image: mysql:8.0.36
         restart: no
         environment:
+            MYSQL_USER: "${FLASK_MYSQL_USER}"
+            MYSQL_PASSWORD: "${FLASK_MYSQL_PASSWORD}"
+            MYSQL_DATABASE: "${FLASK_MYSQL_DATABASE}"
             MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
         volumes:
             - ./data/mysql:/docker-entrypoint-initdb.d
