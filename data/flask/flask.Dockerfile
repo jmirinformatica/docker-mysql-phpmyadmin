@@ -1,5 +1,5 @@
 # Partim de la imatge oficial: https://hub.docker.com/_/python
-FROM python:3.9.18-bookworm
+FROM python:3.9.20-bookworm
 
 # Definim el directori de treball
 WORKDIR /flask_app_to_deploy

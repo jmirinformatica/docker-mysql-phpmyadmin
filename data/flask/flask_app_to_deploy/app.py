@@ -16,6 +16,6 @@ mysql = MySQL(app)
 def demo():
     cur = mysql.connection.cursor()
     cur.execute('''SELECT NOW()+0''')
-    data = cur.fetchall()
+    timestamp = cur.fetchone()[0]
     cur.close()
-    return f"<h1>Hello from Flask!</h1><p>Data i hora de MySQL: {data}</p><img src='/static/mei.png' alt='mei'>"
+    return f"<h1>Hello from Flask!</h1><p>Data i hora de MySQL: {timestamp}</p><img src='/static/mei.png' alt='mei'>"
