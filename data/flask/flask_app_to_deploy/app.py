@@ -15,7 +15,7 @@ mysql = MySQL(app)
 @app.route('/')
 def demo():
     cur = mysql.connection.cursor()
-    cur.execute('''SELECT NOW()''')
+    cur.execute('''SELECT NOW()+0''')
     data = cur.fetchall()
     cur.close()
-    return f"<h1>Hello from Flask!</h1><p>{data}</p><img src='/static/mei.png' alt='mei'>"
+    return f"<h1>Hello from Flask!</h1><p>Data i hora de MySQL: {data}</p><img src='/static/mei.png' alt='mei'>"
