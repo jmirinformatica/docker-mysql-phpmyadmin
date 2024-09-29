@@ -27,7 +27,10 @@ services:
         depends_on:
             - mysql
     mysql:
-        image: mysql:8.0.39
+        build:
+            context: ./data/mysql
+            dockerfile: mysql.Dockerfile
+        command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
         restart: no
         environment:
             MYSQL_USER: "${FLASK_MYSQL_USER}"
@@ -35,7 +38,7 @@ services:
             MYSQL_DATABASE: "${FLASK_MYSQL_DATABASE}"
             MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
         volumes:
-            - ./data/mysql:/docker-entrypoint-initdb.d
+            - ./data/mysql/sql:/docker-entrypoint-initdb.d
             - mysql_volume:/var/lib/mysql
         ports:
             - ${IP}:${MYSQL_PORT}:3306
