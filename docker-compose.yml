@@ -37,5 +37,22 @@ services:
         ports:
             - ${IP}:${MYSQL_PORT}:3306
 
+    postgres:
+        image: postgres:16.4
+        restart: no
+        environment:
+            POSTGRES_USER: root
+            POSTGRES_PASSWORD: "${POSTGRES_ROOT_PASSWORD}"
+            POSTGRES_DB: default
+            PDDATA: /var/lib/postgresql/data/pgdata
+        volumes:
+            - ./data/postgres/sql:/docker-entrypoint-initdb.d
+            - postgres_volume:/var/lib/postgresql/data
+        ports:
+            - ${IP}:${POSTGRES_PORT}:5432
+
+    # https://hub.docker.com/r/dockage/phppgadmin
+
 volumes:
     mysql_volume:
+    postgres_volume:
