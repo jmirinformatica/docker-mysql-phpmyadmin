@@ -1,11 +1,13 @@
-# Docker MySQL PhpMyadmin
+# Docker MySQL & PostgreSQL
 
-Desplegament bàsic de MySQL amb PHPMyAdmin.
+Desplegament bàsic de MySQL i PostgreSQL amb [AdminerEvo](https://docs.adminerevo.org/).
 
-**Important!** MySQL per defecte s'ha configurat per a que sigui accessible fora de docker, amb la IP configurada. Comenta la línia del [docker-composen.yml](./docker-compose.yml) si no vols aquest comportament:
-
-    - ${IP}:${MYSQL_PORT}:3306
+**Important!** Tant PostgreSQL com MySQL estan configurats per defectet per a que siguin accessibles fora de docker, amb la IP configurada. Revisa el fitxer [docker-compose.yml](./docker-compose.yml) si no vols aquest comportament.
 
 ## Configuració
 
-Crea un fitxer `.env` amb els paràmetres de configuració. Pots fer servir el fitxer [.env.exemple](./.env.exemple).
+Crea un fitxer `.env` amb els paràmetres de configuració. Pots fer servir el fitxer [.env.exemple](./.env.exemple). A continuació executa:
+
+    docker compose up -d
+
+
