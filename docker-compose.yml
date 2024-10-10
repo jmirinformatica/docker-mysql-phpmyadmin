@@ -1,31 +1,32 @@
 services:
     nginx:
         image: nginx:1.27.1
+        restart: no
         ports:
             - ${IP}:${NGINX_HTTP_PORT}:80
             - ${IP}:${NGINX_HTTPS_PORT}:443
         volumes:
-            - ./data/nginx/default_${NGINX_PROTOCOL}.conf:/etc/nginx/conf.d/default.conf
+            - ./data/nginx/${NGINX_CONF}:/etc/nginx/conf.d/default.conf
             - ./data/html:/var/www/html
             - ./data/letsencrypt:/etc/letsencrypt
             - ./data/flask/flask_app_to_deploy/static:/static
         links:
-            - phpmyadmin:phpmyadmin
+            - adminer:adminer
             - flask:flask
         depends_on:
-            - phpmyadmin
+            - adminer
             - flask
-    phpmyadmin:
-        image: phpmyadmin:5.2.1
-        environment:
-            PMA_HOST: mysql
-            PMA_PORT: 3306
-            PMA_ABSOLUTE_URI: ${NGINX_PROTOCOL}://${DOMAIN}:${NGINX_HTTP_PORT}/phpmyadmin
-            MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+    adminer:
+        image: ghcr.io/shyim/adminerevo:latest
+        restart: no
+        volumes:
+            - ./data/adminer:/var/www/html/plugins-enabled
         links:
             - mysql:mysql
+            - postgres:postgres
         depends_on:
             - mysql
+            - postgres
     mysql:
         build:
             context: ./data/mysql
@@ -42,6 +43,17 @@ services:
             - mysql_volume:/var/lib/mysql
         ports:
             - ${IP}:${MYSQL_PORT}:3306
+    postgres:
+        image: postgres:16.4
+        restart: no
+        environment:
+            POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+            PDDATA: /var/lib/postgresql/data/pgdata
+        volumes:
+            - ./data/postgres/sql:/docker-entrypoint-initdb.d
+            - postgres_volume:/var/lib/postgresql/data
+        ports:
+            - ${IP}:${POSTGRES_PORT}:5432
     flask:
         build:
             context: ./data/flask
@@ -55,3 +67,4 @@ services:
             - mysql
 volumes:
     mysql_volume:
+    postgres_volume:
